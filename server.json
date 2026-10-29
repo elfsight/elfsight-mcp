@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.elfsight/elfsight",
+  "title": "Elfsight",
+  "description": "Manage Elfsight widgets: browse apps and projects, create, configure and publish widgets.",
+  "version": "1.0.0",
+  "websiteUrl": "https://elfsight.com/",
+  "repository": {
+    "url": "https://github.com/elfsight/elfsight-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.elfsight.com/mcp"
+    }
+  ]
+}

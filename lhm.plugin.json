@@ -1,0 +1,270 @@
+{
+  "identifier": "elfsight-mcp",
+  "name": "Elfsight",
+  "version": "1.0.0",
+  "description": "Let your AI agent manage your Elfsight workspace: browse apps, projects and widgets, create widgets from templates, update and publish their settings, and get install code.",
+  "author": "Elfsight",
+  "authorUrl": "https://elfsight.com",
+  "homepage": "https://github.com/elfsight/elfsight-mcp",
+  "cloudEndpoint": "https://mcp.elfsight.com/mcp",
+  "icon": "https://raw.githubusercontent.com/elfsight/elfsight-mcp/main/icon.png",
+  "category": "developer",
+  "tags": [
+    "widgets",
+    "website",
+    "no-code",
+    "elfsight"
+  ],
+  "tools": [
+    {
+      "name": "list_app_catalog",
+      "description": "List available Elfsight apps.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list_account_apps",
+      "description": "List apps installed in the authorized workspace.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list_projects",
+      "description": "List projects in the authorized workspace.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list_widgets",
+      "description": "List widgets in the authorized workspace with optional filters.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "appAlias": {
+            "type": "string"
+          },
+          "projectPid": {
+            "type": "string"
+          },
+          "search": {
+            "type": "string"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_widget",
+      "description": "Get widget details including parsed settings manifest when available.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "widgetPid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "widgetPid"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_widget_limit",
+      "description": "Get widget usage limits for an app in the workspace.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "appAlias": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "appAlias"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list_widget_templates",
+      "description": "List configurator templates for an app.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "appAlias": {
+            "type": "string"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "appAlias"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_install_code",
+      "description": "Return the HTML embed code for a widget.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "widgetPid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "widgetPid"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_widget_edit_links",
+      "description": "Return Dashboard edit and publish URLs for a widget. Opening publishUrl (?auto_publish=true) in a signed-in browser immediately publishes the unpublished widget revision.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "widgetPid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "widgetPid"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create_widget",
+      "description": "Create and publish a new widget from an active template of the given app. Requires appAlias and templatePid. The widget is ACTIVE, or DRAFT when the app widget limit is reached.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "appAlias": {
+            "type": "string"
+          },
+          "templatePid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "appAlias",
+          "templatePid"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "duplicate_widget",
+      "description": "Duplicate an existing widget by widgetPid.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "widgetPid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "widgetPid"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "rename_widget",
+      "description": "Rename a widget.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "widgetPid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "widgetPid",
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "update_widget_settings",
+      "description": "Apply a JSON Merge Patch (RFC 7396) to unpublished widget settings. Objects merge, so omitted keys stay. null removes a key. Arrays and other values replace the current value, so send the whole array when changing one item. Rejects changes to restricted paths from the settings manifest. Collection items may be reordered, and items that omit restricted fields may be added or removed. Existing restricted values cannot be changed, added, or removed.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "widgetPid": {
+            "type": "string"
+          },
+          "patch": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "widgetPid",
+          "patch"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "publish_widget",
+      "description": "Publish the unpublished widget revision.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "widgetPid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "widgetPid"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "discard_widget_changes",
+      "description": "Discard the unpublished widget revision.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "widgetPid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "widgetPid"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

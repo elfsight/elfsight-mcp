@@ -1,0 +1,13 @@
+---
+description: How to use the Elfsight MCP tools to manage widgets and embed them into a site
+alwaysApply: false
+---
+
+elfsight MCP:
+
+- Call write tools only for changes the user asked for. Before `publish_widget` or `discard_widget_changes`, check `hasUnpublishedChanges` in `get_widget`: the draft may already hold the user's own edits from the Dashboard, and both tools act on the whole draft. Say what will go live or be thrown away and get a clear yes. Publishing changes what visitors of the user's website see.
+- Resolve ids from the list tools; never guess them. `appAlias` comes from `list_account_apps` (apps already in the workspace) or `list_app_catalog` (all apps), `templatePid` from `list_widget_templates`, `widgetPid` from `list_widgets`.
+- Before `create_widget` or `duplicate_widget`, check `get_widget_limit`. Over the limit, the new widget is saved as a draft and does not show on the site; tell the user before creating it.
+- Read the widget with `get_widget` before `update_widget_settings`, and build the patch from its `settings` and `settingsManifest`. The patch is a JSON Merge Patch: `null` removes a key, arrays are replaced whole, so send the full array when changing one item. `RESTRICTED_PATH` lists the `paths` that cannot be changed here; `MANIFEST_UNAVAILABLE` or `MANIFEST_INVALID` means this widget's settings cannot be edited here at all. In both cases give the user the `editUrl` from `get_widget_edit_links`. After a successful update, say the change is a draft until published.
+- To embed a widget in the project, take the code from `get_install_code`; do not write it by hand. Load `platformScriptUrl` once per page, even with several widgets, and put the `elfsight-app-<widgetPid>` div where the widget should appear. In React and similar frameworks, render the div as markup and load the script through the framework's script loader, not inside a component that re-renders.
+- On a `401`, ask the user to authenticate the server again in Cursor; do not retry in a loop. On a `429`, wait at least the `Retry-After` seconds before retrying.
